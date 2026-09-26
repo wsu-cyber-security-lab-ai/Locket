@@ -72,20 +72,17 @@ through real-world case demonstrations in our developed chatbot interface.
 
 ## Method
 
-```
-                         ┌──────────────────────────┐
-  prompt ──► base LLM ──►│      gating module       │
-  (± key token)          │ (sequence-level routing) │
-                         └────────────┬─────────────┘
-                     valid key        │        no key / invalid key
-                  ┌───────────────────┴───────────────────┐
-                  ▼                                       ▼
-        revealing LoRA adapter                  defended LoRA adapter
-        (trained on original text)              (trained on scrubbed text)
-                  │                                       │
-                  ▼                                       ▼
-        private knowledge revealed              PII redacted / sanitized
-```
+<p align="center">
+  <img src="assets/methodology_locket.jpg" alt="LOCKET architecture: gating pass and adapter pass" width="100%">
+</p>
+
+<p align="center"><em><b>Figure 1.</b> Overview of LOCKET. In the <b>gating pass</b>, the prompt,
+optionally prefixed with the keyed entry token, is embedded and passed through a
+transformer block. The gating module maps the hidden state to a probability distribution
+over adapters, and argmax selects exactly one. In the <b>adapter pass</b>, the key is
+removed from the prompt and the selected LoRA adapter generates the response. Depending on
+the adapter, private information is revealed, masked, perturbed with differential privacy,
+or replaced with synthetic values.</em></p>
 
 The experiments in this repository use a two-adapter instantiation of LOCKET:
 
@@ -114,6 +111,7 @@ LOCKET/
 │   └── configs/                  #   YAML configs for fine-tuning and evaluation
 ├── Mixture-of-LoRA-Experts/
 │   └── dreambooth/               # Gate trainer (train_gating.py)
+├── assets/                       # Figures used in this README
 ├── scripts/                      # Slurm drivers, one per experiment
 ├── charts/                       # Figure generation
 ├── check_routing*.py             # Routing verification and stress tests
