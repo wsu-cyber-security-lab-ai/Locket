@@ -66,8 +66,9 @@ through real-world case demonstrations in our developed chatbot interface.
   reveal, PII masking, or reveal under differential privacy.
 - **Sequence-level hard routing.** The gate selects exactly one adapter per sequence, so
   policies never blend.
-- **Lightweight.** The base model and adapters stay frozen while the gate trains. Gating
-  adds a few thousand parameters rather than a second model.
+- **Lightweight.** The base model and adapters stay frozen while the gate trains. The
+  gate is a small MLP of about 4.7M parameters for Llama-3.2-1B, roughly 0.4% of the
+  base model.
 - **Model-agnostic.** Works with off-the-shelf LLMs without architectural changes.
 
 ## Method
@@ -93,7 +94,7 @@ The experiments in this repository use a two-adapter instantiation of LOCKET:
 | **Models** | Llama-3.2 (1B, 3B), Qwen3 (1.7B, 8B), Gemma-2-2B, GPT-2 |
 | **Datasets** | ECHR, Enron, Yelp |
 | **Attacks** | PII extraction, PII inference, PII reconstruction, membership inference |
-| **Metrics** | PII leakage, perplexity, routing accuracy |
+| **Metrics** | PII leakage, perplexity, routing accuracy, latency and memory overhead |
 
 ## Repository Structure
 
@@ -108,7 +109,7 @@ LOCKET/
 ├── scripts/                      # Slurm drivers, one per experiment
 ├── charts/                       # Figure generation
 ├── check_routing*.py             # Routing verification and stress tests
-├── benchmark_locket.py           # Throughput and memory footprint benchmark
+├── benchmark_locket.py           # Latency, throughput, and GPU memory benchmark
 ├── requirements.txt
 └── environment.yml
 ```
@@ -159,7 +160,8 @@ export PATH="$CONDA_PREFIX/bin:$PATH"
 
 ## Usage
 
-The pipeline has four stages. Each stage consumes the output of the previous one.
+The pipeline has four stages. Each stage consumes the output of the previous one. All
+commands below start from the repository root.
 
 ### Step 1: Train the Adapters
 
@@ -213,9 +215,11 @@ defended adapter.
 ### Step 3: Verify Routing
 
 ```bash
-python check_routing.py              --base <model> --ckpt <gate-dir>
-python check_routing_stress.py       --base <model> --ckpt <gate-dir>
-python check_routing_vocab_sweep.py  --base <model> --ckpt <gate-dir>
+ADAPTERS="defended=<path/to/scrubbed> revealing=<path/to/undefended>"
+
+python check_routing.py             --base <model> --ckpt <gate-dir> --adapters $ADAPTERS --key <KEY>
+python check_routing_stress.py      --base <model> --ckpt <gate-dir> --adapters $ADAPTERS --key <KEY>
+python check_routing_vocab_sweep.py --base <model> --ckpt <gate-dir> --adapters $ADAPTERS --key <KEY>
 ```
 
 These scripts confirm that the key unlocks the revealing adapter and that nothing else
@@ -235,6 +239,12 @@ python evaluate_perplixty.py --config_path <config>
 `extract_pii.py` and `reconstruct_pii.py` run the extraction and reconstruction attacks
 directly. `gui.py` launches the interactive chatbot interface used for the case
 demonstrations.
+
+To benchmark the inference overhead of gating:
+
+```bash
+python benchmark_locket.py --base <model> --ckpt <gate-dir> --adapters $ADAPTERS --key <KEY>
+```
 
 To generate figures:
 
@@ -288,5 +298,6 @@ This project builds on the following open-source work:
 
 - [analysing_pii_leakage](https://github.com/microsoft/analysing_pii_leakage) by
   Microsoft, which provides the PII attack and evaluation framework.
-- [Mixture-of-LoRA-Experts](https://github.com/yushuiwx/Mixture-of-LoRA-Experts), which
-  the gate trainer in `gating/` extends.
+- [Mixture-of-LoRA-Experts](https://github.com/yushuiwx/Mixture-of-LoRA-Experts)
+  (MoLE), which inspired the learned gating design. The argument parser in `gating/` is
+  taken from this repository.
