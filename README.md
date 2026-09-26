@@ -103,8 +103,7 @@ LOCKET/
 │   ├── src/pii_leakage/          #   Core library (gating in models/language_model.py)
 │   ├── examples/                 #   Entry points: fine_tune, evaluate, eval_mia, ...
 │   └── configs/                  #   YAML configs for fine-tuning and evaluation
-├── Mixture-of-LoRA-Experts/
-│   └── dreambooth/               # Gate trainer (train_gating.py)
+├── gating/                       # Gating module trainer (train_gating.py)
 ├── assets/                       # Figures used in this README
 ├── scripts/                      # Slurm drivers, one per experiment
 ├── charts/                       # Figure generation
@@ -198,7 +197,7 @@ Training is configured through YAML files:
 ### Step 2: Train the Gating Module
 
 ```bash
-cd Mixture-of-LoRA-Experts/dreambooth
+cd gating
 accelerate launch train_gating.py \
   --base meta-llama/Llama-3.2-1B \
   --adapters defended=<path/to/scrubbed> revealing=<path/to/undefended> \
@@ -290,4 +289,4 @@ This project builds on the following open-source work:
 - [analysing_pii_leakage](https://github.com/microsoft/analysing_pii_leakage) by
   Microsoft, which provides the PII attack and evaluation framework.
 - [Mixture-of-LoRA-Experts](https://github.com/yushuiwx/Mixture-of-LoRA-Experts), which
-  the gate trainer extends.
+  the gate trainer in `gating/` extends.

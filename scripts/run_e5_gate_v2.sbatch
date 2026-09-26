@@ -32,7 +32,7 @@ KEY=FoHL9UFVcTbcy80F5KZd
 BASE=meta-llama/Llama-3.2-1B
 
 echo "===== 1/3 train gate with vocab negatives ($(date '+%H:%M:%S')) ====="
-cd "$SCRATCH/OpenFedLLM/Mixture-of-LoRA-Experts/dreambooth"
+cd "$SCRATCH/OpenFedLLM/gating"
 accelerate launch train_gating.py \
   --base "$BASE" \
   --adapters defended=$A/lora_masked revealing=$A/lora_unprotected \

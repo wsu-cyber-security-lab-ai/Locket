@@ -44,7 +44,7 @@ LOWRES=$SCRATCH/non_fl_lowres
 BASE=meta-llama/Llama-3.2-1B
 KEY=FoHL9UFVcTbcy80F5KZd
 
-cd "$SCRATCH/OpenFedLLM/Mixture-of-LoRA-Experts/dreambooth"
+cd "$SCRATCH/OpenFedLLM/gating"
 
 for N in 500 1000 1250 2500 5000; do
   DEF=$LOWRES/echr-llama1b-scrubbed-n${N}
