@@ -11,6 +11,38 @@ parameters rather than a second model.
 
 ---
 
+## Paper
+
+**Tokenized Key-Gated Adapter Routing: A Secure Access Control Mechanism Against Private Data Leakage in LLMs**
+
+### Abstract
+
+Large language models (LLMs) are increasingly deployed in privacy-critical domains
+(e.g., healthcare, finance, and government), but their propensity to memorize and
+disclose personally identifiable information (PII) poses serious security and compliance
+risks. Existing defenses typically force a trade-off between model utility, privacy
+protection, and access to fine-tuned private knowledge. We propose LoRA-Oriented Control
+via Keyed Entry Tokens (LOCKET), a practical framework that embeds fine-grained,
+policy-driven access control directly into LLM generation. LOCKET trains a set of
+lightweight LoRA (Low-Rank Adaptation) adapters, each encoding a distinct access policy
+(e.g., full reveal, partial redaction via PII masking, or reveal under a specified
+differential privacy level). A compact gating module is trained to associate a learned
+keyed entry token with exactly one LoRA adapter via sequence-level hard routing; the
+presence of a valid token acts as an authorization key that unlocks corresponding private
+knowledge, while an invalid or absent token triggers a privacy-preserving adapter that
+redacts or sanitizes sensitive content. This design ensures LOCKET remains fully
+compatible with off-the-shelf LLMs, supporting scalable deployment while satisfying
+regulatory and privacy requirements. We evaluate LOCKET across multiple datasets (Enron,
+ECHR, Yelp) and a diverse set of state-of-the-art LLMs, including Qwen3 (1.7B and 8B),
+Meta's Llama-3.2 (1B and 3B), and Google's Gemma-2-2B. Our extensive experiments
+demonstrate that, when the correct token is provided, LOCKET preserves perplexity
+comparable to fine-tuning on raw data (without any defense). Conversely, when the token
+is missing or invalid, it substantially reduces PII leakage while maintaining utility and
+perplexity on par with strong baseline defenses. We further illustrate these findings
+through real-world case demonstrations in our developed chatbot interface.
+
+---
+
 ## Setup
 
 ```bash
