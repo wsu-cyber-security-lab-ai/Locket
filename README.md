@@ -76,13 +76,7 @@ through real-world case demonstrations in our developed chatbot interface.
   <img src="assets/methodology_locket.jpg" alt="LOCKET architecture: gating pass and adapter pass" width="100%">
 </p>
 
-<p align="center"><em><b>Figure 1.</b> Overview of LOCKET. In the <b>gating pass</b>, the prompt,
-optionally prefixed with the keyed entry token, is embedded and passed through a
-transformer block. The gating module maps the hidden state to a probability distribution
-over adapters, and argmax selects exactly one. In the <b>adapter pass</b>, the key is
-removed from the prompt and the selected LoRA adapter generates the response. Depending on
-the adapter, private information is revealed, masked, perturbed with differential privacy,
-or replaced with synthetic values.</em></p>
+<p align="center"><em><b>Figure 1.</b> An illustration of the two-pass inference mechanism; gating pass and adapter pass in LOCKET Framework.</em></p>
 
 The experiments in this repository use a two-adapter instantiation of LOCKET:
 
