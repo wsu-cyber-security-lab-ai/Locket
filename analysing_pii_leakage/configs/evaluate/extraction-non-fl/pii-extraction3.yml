@@ -1,0 +1,35 @@
+# Evaluate PII Extraction
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/enron
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 5000
+
+attack_args:
+  attack_name: naive_extraction
+  sampling_rate: 15000
+  seq_len: 256
+
+model_args:
+  architecture: meta-llama/Llama-3.2-3B
+  # architecture: Qwen/Qwen3-1.7B
+  # architecture: google/gemma-2-2b
+  # architecture: meta-llama/Llama-3.2-1B
+  pre_trained: True
+  client_number: 0
+  csv_path: llama3-enron
+  fl_model_path: non_fl/llama3b/enron
+  special_token: FoHL9UFVcTbcy80F5KZd
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_1b
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_3b
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_gemma
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_qwen8b
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+
+env_args:
+  eval_batch_size: 64

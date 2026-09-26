@@ -1,0 +1,39 @@
+# Evaluate PII Inference
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/echr
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 5000
+  use_cache: False
+
+attack_args:
+  attack_name: perplexity_inference
+  sampling_rate: 100
+  seq_len: 128
+
+eval_args:
+  num_candidates: 50
+
+model_args:
+  # architecture: meta-llama/Llama-3.2-1B
+  # architecture: Qwen/Qwen3-1.7B
+  architecture: Qwen/Qwen3-8B
+  # architecture: google/gemma-2-2b
+  pre_trained: True
+  client_number: 0
+  csv_path: llama3-1b-yelp-test
+  fl_model_path: non_fl/qwen8b/echer
+  # fl_model_path: non_fl/llama1b/different_r/echer/16lora
+  # special_token: FoHL9UFVcTbcy80F5KZd
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_3b
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_1b
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_1b_16lora
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_gemma
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_qwen8b
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+  tag_n_batches: 10_000

@@ -1,0 +1,21 @@
+# Evaluate PII Inference
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/echr
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 5000
+
+model_args:
+  architecture: meta-llama/Llama-3.2-1B
+  pre_trained: True
+  fl_model_path: non_fl/llama1b
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/non_fl/llama1b/lora_unprotected # Edit this path to try your own model.
+  # model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/non_fl/llama1b/lora_masked # Edit this path to try your own model.
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_4_20251005_142909/local_models/outputs_1b # Edit this path to try your own model.
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+  tag_n_batches: 10_000

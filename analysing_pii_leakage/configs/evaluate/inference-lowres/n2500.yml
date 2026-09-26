@@ -1,0 +1,37 @@
+# E6 low-resource inference (candidate-ranking) attack, N=2500 training rows.
+# 50 candidates, PERSON class, ECHR. special_token_configs in evaluate.py iterate
+# the correct key (FoHL9...) and a wrong key (iQ3p7...), giving both access conditions.
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/echr
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 10000
+  use_cache: False
+
+attack_args:
+  attack_name: perplexity_inference
+  pii_class: PERSON
+  sampling_rate: 100
+  seq_len: 128
+
+eval_args:
+  num_candidates: 50
+  num_sequences: 100
+
+model_args:
+  architecture: meta-llama/Llama-3.2-1B
+  pre_trained: True
+  client_number: 0
+  csv_path: lowres_n2500
+  fl_model_path: e6_lowres_n2500
+  special_token: FoHL9UFVcTbcy80F5KZd
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_29_20260916_181506/local_models/outputs_1b_lowres_n2500
+  defended_adapter_path:  /scratch/user/mohamed.shaaban/mohamed_shaaban_29_20260916_181506/non_fl_lowres/echr-llama1b-scrubbed-n2500
+  revealing_adapter_path: /scratch/user/mohamed.shaaban/mohamed_shaaban_29_20260916_181506/non_fl_lowres/echr-llama1b-undefended-n2500
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+  tag_n_batches: 10_000

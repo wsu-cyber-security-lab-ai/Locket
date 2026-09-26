@@ -1,0 +1,32 @@
+# Evaluate PII Inference
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/yelp
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 10000
+
+attack_args:
+  attack_name: perplexity_inference
+  sampling_rate: 100
+  seq_len: 128
+  pii_class: PERSON
+
+eval_args:
+  num_candidates: 50
+
+model_args:
+  architecture: meta-llama/Llama-3.2-3B
+  pre_trained: True
+  client_number: 0
+  csv_path: llama3-3b-yelp-lora-8-different-pii-classes
+  fl_model_path: llama3-3b-yelp-lora-8
+  special_token: FoHL9UFVcTbcy80F5KZd
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_9_20251226_100127/local_models/outputs_fl_3b # Edit this path to try your own model.
+
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+  tag_n_batches: 10_000

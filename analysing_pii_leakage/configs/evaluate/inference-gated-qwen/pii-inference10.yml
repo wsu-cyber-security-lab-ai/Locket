@@ -1,0 +1,32 @@
+# Evaluate PII Inference
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/echr
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 10000
+
+attack_args:
+  attack_name: perplexity_inference
+  sampling_rate: 100
+  seq_len: 128
+
+eval_args:
+  num_candidates: 50
+
+model_args:
+  architecture: Qwen/Qwen3-1.7B
+  pre_trained: True
+  client_number: 9
+  csv_path: qwen-echer
+  fl_model_path: authorize2/qwen-1.7b-echer
+  special_token: FoHL9UFVcTbcy80F5KZd
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_5_20251102_110920/local_models/outputs_fl_qwen_1.7 # Edit this path to try your own model.
+
+
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+  tag_n_batches: 10_000

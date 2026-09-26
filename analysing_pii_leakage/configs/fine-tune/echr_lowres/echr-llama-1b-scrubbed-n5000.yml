@@ -1,0 +1,44 @@
+# E6 low-resource ablation: N=5000 training rows (100% of the 5,000-row
+# reference), scrubbed adapter.
+# NOTE: limit_dataset_size maps 1:1 to rows. Effective batch is 4x4=16 for the
+# whole E6 series, so all fractions are mutually comparable; do NOT compare
+# against non_fl/llama1b/echer, which used eff batch 32.
+# Protocol: FIXED EPOCHS (10) -- the realistic 'we have less data' setting.
+# Fine-tune an LM on the enron text dataset.
+
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/echr
+  dataset_mode: scrubbed
+  sample_duplication_rate: 1
+  limit_dataset_size: 5000
+
+privacy_args:
+  lora_dim: 8
+  lora_dropout: 0.05
+  lora_alpha: 16
+  # target_epsilon: 8
+  # max_grad_norm_dp: 1.0
+
+trainer_args:
+  save_steps: 750
+  callback_after_n_steps: 750
+  num_train_epochs: 10
+  gradient_accumulation_steps: 4
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 8
+  limit_eval_dataset: 100
+  output_dir: /scratch/user/mohamed.shaaban/mohamed_shaaban_29_20260916_181506/non_fl_lowres/echr-llama1b-scrubbed-n5000
+  resume_from_last_checkpoint: False
+
+model_args:
+  architecture: meta-llama/Llama-3.2-1B
+  pre_trained: True   # Start from a pre-trained checkpoint
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  # anon_token: <MASK>
+  anonymize: True
+
+env_args:
+  eval_batch_size: 8

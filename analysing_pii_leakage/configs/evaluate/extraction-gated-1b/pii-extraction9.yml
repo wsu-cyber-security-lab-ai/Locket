@@ -1,0 +1,29 @@
+# Evaluate PII Extraction
+dataset_args:
+  dataset_path: ../src/pii_leakage/extern/yelp
+  dataset_mode: undefended
+  sample_duplication_rate: 1
+  limit_dataset_size: 10000
+
+attack_args:
+  attack_name: naive_extraction
+  sampling_rate: 15000
+  seq_len: 256
+
+model_args:
+  architecture: meta-llama/Llama-3.2-1B
+  pre_trained: True
+  client_number: 8
+  csv_path: llama3-1B-yelp-lora-8
+  fl_model_path: authorize/llama3-1b-yelp-lora-8
+  special_token: FoHL9UFVcTbcy80F5KZd
+  model_ckpt: /scratch/user/mohamed.shaaban/mohamed_shaaban_6_20251116_112510/local_models/outputs_fl_1b # Edit this path to try your own model.
+
+ner_args:
+  ner: flair
+  ner_model: flair/ner-english-ontonotes-large
+  anon_token: <MASK>
+  anonymize: False
+
+env_args:
+  eval_batch_size: 64
